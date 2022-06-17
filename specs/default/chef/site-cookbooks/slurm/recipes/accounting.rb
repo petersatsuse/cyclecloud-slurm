@@ -62,6 +62,13 @@ when 'centos', 'rhel', 'redhat'
     end
 end
 
+case node[:platform]
+when 'sle_hpc'
+    package 'slurm-slurmdbd' do
+        action: install
+    end
+end
+
 # Configure slurmdbd.conf
 template '/sched/slurmdbd.conf' do
     owner "#{slurmuser}"

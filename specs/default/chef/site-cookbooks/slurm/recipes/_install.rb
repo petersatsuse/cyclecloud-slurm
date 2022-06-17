@@ -93,3 +93,10 @@ when 'centos', 'rhel', 'redhat', 'almalinux'
     end
   end
 end
+
+case node[:platform]
+when 'sle_hpc'
+  package %w('slurm', 'slurm-devel', 'slurm-config', 'slurm-munge', 'perl-slurm', 'slurm-torque') do
+      action: install
+  end
+end

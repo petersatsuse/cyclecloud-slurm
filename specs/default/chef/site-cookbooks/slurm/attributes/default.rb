@@ -26,6 +26,11 @@ when 'centos', 'rhel', 'redhat', 'almalinux'
   default[:slurm][:user][:uid] = 11100
   default[:slurm][:user][:gid] = 11100
 end
+case node[:platform]
+when 'sle_hpc'
+  default[:slurm][:user][:uid] = 11100
+  default[:slurm][:user][:gid] = 11100
+end
 default[:munge][:user][:name] = 'munge'
 default[:munge][:user][:uid] = 11101
 default[:munge][:user][:gid] = 11101
