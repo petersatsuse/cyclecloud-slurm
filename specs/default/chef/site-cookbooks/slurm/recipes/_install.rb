@@ -92,11 +92,17 @@ when 'centos', 'rhel', 'redhat', 'almalinux'
       action :install
     end
   end
-end
 
-case node[:platform]
-when 'sle_hpc'
-  package %w('slurm', 'slurm-devel', 'slurm-config', 'slurm-munge', 'perl-slurm', 'slurm-torque') do
-      action: install
+when 'suse'
+  packages = %w{slurm slurm-devel slurm-config slurm-munge slurm-torque}
+  case node[:platform]
+    when 'suse', 'opensuseleap', 'opensuse-tumbleweed'
+      # TODO sles needs package hub
+      packages += %w{slurm-example-configs slurm-perlapi}
+    when 'sle-hpc', 'sle_hpc'
+      packages += %w{perl-slurm}
+  end
+  package packages do
+    action :install
   end
 end

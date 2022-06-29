@@ -38,23 +38,13 @@ user mungeuser do
   action :create
 end
 
-log 'test' do
-  level: info
-  message 'test'
+
+log 'message' do
+  message "slum_install: #{node[:slurm][:install]}"
+  level :info
 end
 
 node.debug_value('slurm', 'install')
-
-output="#{Chef::JSONCompat.to_json_pretty(node.to_hash)}"
-log 'message' do
-  level :info
-  mesage output
-end
-
-output = node.to_yaml
-file '/var/node.yaml' do
-  content output
-end
 
 include_recipe 'slurm::_install' if node[:slurm][:install]
 
