@@ -75,7 +75,7 @@ def generate_job_descriptor_class(lines):
     return job_descriptor
 
 
-SLURM_H_PATH = os.path.expanduser("~/job_submit/slurm-20.11.7/slurm/slurm.h")
+SLURM_H_PATH = os.path.expanduser("~/job_submit/slurm-22.05.2/slurm/slurm.h")
 if os.getenv("SLURM_H_PATH", ""):
     SLURM_H_PATH = os.environ["SLURM_H_PATH"]
 
