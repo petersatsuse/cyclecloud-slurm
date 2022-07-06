@@ -9,7 +9,7 @@ function build_slurm() {
     set -e
 
     DISTRO_FAMILY=${1}
-    SLURM_VERSION=$2
+    SLURM_VERSION=${2}
 
     SLURM_FOLDER="slurm-${SLURM_VERSION}"
     SLURM_PKG="slurm-${SLURM_VERSION}.tar.bz2"
@@ -28,6 +28,7 @@ function build_slurm() {
         centos)
             CENTOS_VERSION=8.5
             CENTOS_MAJOR=8
+
             if [ $CENTOS_VERSION \< "8." ]; then
                 LIBTOOL=libtool-2.4.2
             else
@@ -59,7 +60,7 @@ function build_slurm() {
         wget "${DOWNLOAD_URL}/${SLURM_PKG}"
     fi
 
-    # rpmbuild --with mysql -ta ${SLURM_PKG}
+    rpmbuild --with mysql -ta ${SLURM_PKG}
 
     # make the plugin
     rm -rf ~/job_submit
@@ -79,16 +80,16 @@ function build_slurm() {
     sed -i 's/src\/plugins\/job_submit\/Makefile/src\/plugins\/job_submit\/Makefile\n                 src\/plugins\/job_submit\/cyclecloud\/Makefile/g'  ${SLURM_FOLDER}/configure.ac
     cd ~/job_submit/${SLURM_FOLDER}
 
-    # if [ "$SLURM_VERSION" \> "19" ]; then
-    #     autoconf
-    # else
-    #     ./autogen.sh
-    # fi
+    if [ "$SLURM_VERSION" \> "19" ]; then
+        autoconf
+    else
+        ./autogen.sh
+    fi
 
-    # ./configure
-    # make
+    ./configure
+    make
     cd ~/job_submit/${SLURM_FOLDER}/src/plugins/job_submit/cyclecloud/
-    # make
+    make
 
     LD_LIBRARY_PATH=/root/job_submit/${SLURM_FOLDER}/src/api/.libs/ JOB_SUBMIT_CYCLECLOUD=1 python3 job_submit_cyclecloud_test.py
     rsync .libs/job_submit_cyclecloud.so  /root/rpmbuild/RPMS/x86_64/job_submit_cyclecloud_${DISTRO_FAMILY}${CENTOS_MAJOR}_${SLURM_VERSION}-1.so

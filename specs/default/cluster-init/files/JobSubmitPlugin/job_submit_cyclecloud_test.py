@@ -119,7 +119,7 @@ class Test(unittest.TestCase):
             job_ptr = ctypes.POINTER(job_descriptor)(job)
             lib.job_submit(job_ptr, 0, "")
 
-            self.assertEquals(expected_switches, job_ptr.contents.req_switch)
+            self.assertEqual(expected_switches, job_ptr.contents.req_switch)
         
         run_test(0, None, 1)
         run_test(5, None, 5)
