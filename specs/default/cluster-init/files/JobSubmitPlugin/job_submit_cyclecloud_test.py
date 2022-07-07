@@ -72,6 +72,7 @@ def generate_job_descriptor_class(lines):
 
     class job_descriptor(ctypes.Structure):
         _fields_ = fields
+
     return job_descriptor
 
 
@@ -105,6 +106,9 @@ class Test(unittest.TestCase):
             job = job_descriptor()
             job.req_switch = user_req_switches
             job.network = ctypes.c_char_p(user_network if user_network is None else user_network.encode())
+            print(f"network: {job.network}")
+            print(f"req_switch: {job.req_switch}")
+            
             args = []
             
             if user_req_switches:
@@ -116,17 +120,23 @@ class Test(unittest.TestCase):
             job.argc = len(args)
             job.argv = (ctypes.c_char_p * job.argc)(*[a.encode() for a in args])
 
-            job_ptr = ctypes.POINTER(job_descriptor)(job)
+            print(job)
+
+            job_ptr = ctypes.pointer(job)
             lib.job_submit(job_ptr, 0, "")
 
-            self.assertEqual(expected_switches, job_ptr.contents.req_switch)
+            print("")
+            self.assertEqual(job_ptr.contents.req_switch, expected_switches)
         
-        run_test(0, None, 1)
-        run_test(5, None, 5)
-        run_test(0, "Instances=5", 1)
-        print("running last test")
-        run_test(0, "Instances=5,sn_single", 0)
         
+        with self.subTest("0 | None | 1"):
+            run_test(0, None, 1)
+        with self.subTest("5 | None | 5"):
+            run_test(5, None, 5)
+        with self.subTest("0 | Instances=5 | 1"):
+            run_test(0, "Instances=5", 1)
+        with self.subTest("0 | Instances=5,sn_single | 0"):
+            run_test(0, "Instances=5,sn_single", 0)            
 
 if __name__ == "__main__":
     unittest.main()
