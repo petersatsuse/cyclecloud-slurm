@@ -92,7 +92,7 @@ function build_slurm() {
     make
 
     LD_LIBRARY_PATH=/root/job_submit/${SLURM_FOLDER}/src/api/.libs/ JOB_SUBMIT_CYCLECLOUD=1 python3 job_submit_cyclecloud_test.py
-    rsync .libs/job_submit_cyclecloud.so  /root/rpmbuild/RPMS/x86_64/job_submit_cyclecloud_${DISTRO_FAMILY}${CENTOS_MAJOR}_${SLURM_VERSION}-1.so
+    cp .libs/job_submit_cyclecloud.so job_submit_cyclecloud_${DISTRO_FAMILY}${CENTOS_MAJOR}_${SLURM_VERSION}-1.so
 }
 
 function install_pmix() {
@@ -124,4 +124,4 @@ function install_pmix() {
     cd ../../install/v3/
 }
 
-build_slurm suse 22.05.2
+build_slurm suse 20.11.9

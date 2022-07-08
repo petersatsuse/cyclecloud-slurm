@@ -76,7 +76,7 @@ def generate_job_descriptor_class(lines):
     return job_descriptor
 
 
-SLURM_H_PATH = os.path.expanduser("~/job_submit/slurm-22.05.2/slurm/slurm.h")
+SLURM_H_PATH = os.path.expanduser("~/job_submit/slurm-20.11.9/slurm/slurm.h")
 if os.getenv("SLURM_H_PATH", ""):
     SLURM_H_PATH = os.environ["SLURM_H_PATH"]
 
@@ -119,8 +119,6 @@ class Test(unittest.TestCase):
 
             job.argc = len(args)
             job.argv = (ctypes.c_char_p * job.argc)(*[a.encode() for a in args])
-
-            print(job)
 
             job_ptr = ctypes.pointer(job)
             lib.job_submit(job_ptr, 0, "")
