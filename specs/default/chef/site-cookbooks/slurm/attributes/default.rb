@@ -26,12 +26,23 @@ case myplatform
     default[:slurm][:user][:uid] = 11100
     default[:slurm][:user][:gid] = 11100
   when 'suse'
-    default[:slurm][:user][:uid] = 11100
-    default[:slurm][:user][:gid] = 11100
+  # does come with the package  
+  # slurm:x:468:468:SLURM workload manager:/etc/slurm:/bin/false
+    default[:slurm][:user][:uid] = 468
+    default[:slurm][:user][:gid] = 468
 end
+
 default[:munge][:user][:name] = 'munge'
-default[:munge][:user][:uid] = 11101
-default[:munge][:user][:gid] = 11101
+# does come with the package
+# munge:x:467:467:MUNGE authentication service:/run/munge:/usr/sbin/nologin
+case myplatform 
+  when 'suse'
+    default[:munge][:user][:uid] = 467    
+    default[:munge][:user][:gid] = 467
+  else
+    default[:munge][:user][:uid] = 11101
+    default[:munge][:user][:gid] = 11101
+end
 # Time between a suspend call and when that node can be used again - i.e. 10 minutes to shutdown 
 default[:slurm][:suspend_timeout] = 600
 # Boot timeout
